@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ChatContext } from "../context/chat/ChatContext";
+import { chatTypes } from "../types/chatTypes";
 
-export const SidebarChatItem = () => {
+export const SidebarChatItem = ({ user }) => {
+  const { name, online } = user;
+  const { chatState, dispatch } = useContext(ChatContext);
+
+  const handleClick = () => {
+    dispatch({
+      type: chatTypes.activeChat,
+      payload: user._id,
+    });
+  };
   return (
     // active_chat
-    <div className="chat_list ">
+    <div
+      className={`chat_list ${
+        user._id === chatState.chatActive && "active_chat"
+      } `}
+      onClick={handleClick}
+    >
       <div className="chat_people">
         <div className="chat_img">
           <img
@@ -12,9 +28,12 @@ export const SidebarChatItem = () => {
           />
         </div>
         <div className="chat_ib">
-          <h5>Some random name</h5>
-          <span className="text-success">Online</span>
-          <span className="text-danger">Offline</span>
+          <h5>{name}</h5>
+          {online ? (
+            <span className="text-success">Online</span>
+          ) : (
+            <span className="text-danger">Offline</span>
+          )}
         </div>
       </div>
     </div>
